@@ -34,32 +34,26 @@ class Program
         Dictionary<string, List<Contact>> cityDictionary = BuildCityDictionary(allContacts);
         Dictionary<string, List<Contact>> stateDictionary = BuildStateDictionary(allContacts);
 
-        Console.Write("Enter the city to view persons: ");
-        string viewCity = Console.ReadLine();
+        Console.Write("Enter the city to get the number of contact persons: ");
+        string cityToCount = Console.ReadLine();
 
-        if (cityDictionary.ContainsKey(viewCity))
+        if (cityDictionary.ContainsKey(cityToCount))
         {
-            Console.WriteLine($"Persons in {viewCity}:");
-            foreach (Contact contact in cityDictionary[viewCity])
-            {
-                Console.WriteLine($"Name: {contact.Name}, Phone: {contact.PhoneNumber}, Email: {contact.Email}");
-            }
+            int count = cityDictionary[cityToCount].Count;
+            Console.WriteLine($"Number of contact persons in {cityToCount}: {count}");
         }
         else
         {
             Console.WriteLine("City not found.");
         }
 
-        Console.Write("Enter the state to view persons: ");
-        string viewState = Console.ReadLine();
+        Console.Write("Enter the state to get the number of contact persons: ");
+        string stateToCount = Console.ReadLine();
 
-        if (stateDictionary.ContainsKey(viewState))
+        if (stateDictionary.ContainsKey(stateToCount))
         {
-            Console.WriteLine($"Persons in {viewState}:");
-            foreach (Contact contact in stateDictionary[viewState])
-            {
-                Console.WriteLine($"Name: {contact.Name}, Phone: {contact.PhoneNumber}, Email: {contact.Email}");
-            }
+            int count = stateDictionary[stateToCount].Count;
+            Console.WriteLine($"Number of contact persons in {stateToCount}: {count}");
         }
         else
         {
