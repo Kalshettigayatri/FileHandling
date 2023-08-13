@@ -1,58 +1,83 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using Microsoft.VisualBasic.FileIO;
 
-class Contact
+namespace AddressBookApp
 {
-    public string Name { get; set; }
-    public string PhoneNumber { get; set; }
-    public string Email { get; set; }
-}
-
-class Program
-{
-    static void Main(string[] args)
+    class Contact
     {
-        List<Contact> addressBook = new List<Contact>
-        {
-            new Contact { Name = "Alice", PhoneNumber = "123-456-7890", Email = "alice@example.com" },
-            new Contact { Name = "Bob", PhoneNumber = "987-654-3210", Email = "bob@example.com" }
-        };
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Address { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public string Zip { get; set; }
+        public string PhoneNumber { get; set; }
+        public string Email { get; set; }
+    }
 
-        // Write the address book to a CSV file
-        using (var writer = new StreamWriter("addressbook.csv"))
+    class AddressBook
+    {
+        private List<Contact> contacts = new List<Contact>();
+
+        public void AddContact(Contact contact)
         {
-            foreach (var contact in addressBook)
+            contacts.Add(contact);
+        }
+
+        public void DeleteContact(string firstName, string lastName)
+        {
+            Contact contactToRemove = FindContact(firstName, lastName);
+            if (contactToRemove != null)
             {
-                writer.WriteLine($"{contact.Name},{contact.PhoneNumber},{contact.Email}");
+                contacts.Remove(contactToRemove);
+                Console.WriteLine("Contact deleted successfully.");
+            }
+            else
+            {
+                Console.WriteLine("Contact not found.");
             }
         }
 
-        Console.WriteLine("Address book written to CSV file.");
-
-        // Read the address book from the CSV file
-        using (var parser = new TextFieldParser("addressbook.csv"))
+        private Contact FindContact(string firstName, string lastName)
         {
-            parser.TextFieldType = FieldType.Delimited;
-            parser.SetDelimiters(",");
+            return contacts.Find(contact =>
+                contact.FirstName.Equals(firstName, StringComparison.OrdinalIgnoreCase) &&
+                contact.LastName.Equals(lastName, StringComparison.OrdinalIgnoreCase));
+        }
 
-            while (!parser.EndOfData)
+        public void DisplayContacts()
+        {
+            Console.WriteLine("Contacts in Address Book:");
+            foreach (var contact in contacts)
             {
-                string[] fields = parser.ReadFields();
-                if (fields != null && fields.Length >= 3)
-                {
-                    Contact contact = new Contact
-                    {
-                        Name = fields[0],
-                        PhoneNumber = fields[1],
-                        Email = fields[2]
-                    };
-
-                    Console.WriteLine($"Name: {contact.Name}, Phone: {contact.PhoneNumber}, Email: {contact.Email}");
-                }
+                Console.WriteLine($"Name: {contact.FirstName} {contact.LastName}");
+                Console.WriteLine($"Address: {contact.Address}, {contact.City}, {contact.State}, {contact.Zip}");
+                Console.WriteLine($"Phone: {contact.PhoneNumber}");
+                Console.WriteLine($"Email: {contact.Email}");
+                Console.WriteLine();
             }
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            AddressBook addressBook = new AddressBook();
+
+            // Adding some contacts (you can add more contacts here)
+
+            Console.WriteLine("Welcome to Address Book");
+
+            Console.Write("Enter the first name of the contact to delete: ");
+            string deleteFirstName = Console.ReadLine();
+
+            Console.Write("Enter the last name of the contact to delete: ");
+            string deleteLastName = Console.ReadLine();
+
+            addressBook.DeleteContact(deleteFirstName, deleteLastName);
+
+            addressBook.DisplayContacts();
         }
     }
 }
