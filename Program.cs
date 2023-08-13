@@ -1,95 +1,62 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
-class Contact
+class Contact : IComparable<Contact>
 {
     public string Name { get; set; }
     public string PhoneNumber { get; set; }
     public string Email { get; set; }
     public string City { get; set; }
     public string State { get; set; }
+
+    public int CompareTo(Contact other)
+    {
+        return string.Compare(Name, other.Name, StringComparison.OrdinalIgnoreCase);
+    }
+
+    public override string ToString()
+    {
+        return $"Name: {Name}, Phone: {PhoneNumber}, Email: {Email}, City: {City}, State: {State}";
+    }
 }
 
 class Program
 {
     static void Main(string[] args)
     {
-        List<Contact> addressBook1 = new List<Contact>
+        List<Contact> addressBook = new List<Contact>
         {
             new Contact { Name = "Alice", PhoneNumber = "123-456-7890", Email = "alice@example.com", City = "New York", State = "NY" },
-            new Contact { Name = "Bob", PhoneNumber = "987-654-3210", Email = "bob@example.com", City = "Los Angeles", State = "CA" }
-        };
-
-        List<Contact> addressBook2 = new List<Contact>
-        {
+            new Contact { Name = "Bob", PhoneNumber = "987-654-3210", Email = "bob@example.com", City = "Los Angeles", State = "CA" },
             new Contact { Name = "Charlie", PhoneNumber = "111-222-3333", Email = "charlie@example.com", City = "New York", State = "NY" },
             new Contact { Name = "David", PhoneNumber = "555-666-7777", Email = "david@example.com", City = "Chicago", State = "IL" }
         };
 
-        List<Contact> allContacts = new List<Contact>();
-        allContacts.AddRange(addressBook1);
-        allContacts.AddRange(addressBook2);
+        Console.WriteLine("Original Address Book:");
+        PrintContacts(addressBook);
 
-        Dictionary<string, List<Contact>> cityDictionary = BuildCityDictionary(allContacts);
-        Dictionary<string, List<Contact>> stateDictionary = BuildStateDictionary(allContacts);
+        Console.WriteLine("\nEnter 'sort' to sort the address book by name:");
+        string userInput = Console.ReadLine();
 
-        Console.Write("Enter the city to get the number of contact persons: ");
-        string cityToCount = Console.ReadLine();
-
-        if (cityDictionary.ContainsKey(cityToCount))
+        if (userInput.Equals("sort", StringComparison.OrdinalIgnoreCase))
         {
-            int count = cityDictionary[cityToCount].Count;
-            Console.WriteLine($"Number of contact persons in {cityToCount}: {count}");
+            // Sort the address book by name
+            addressBook.Sort();
+
+            Console.WriteLine("\nSorted Address Book:");
+            PrintContacts(addressBook);
         }
         else
         {
-            Console.WriteLine("City not found.");
-        }
-
-        Console.Write("Enter the state to get the number of contact persons: ");
-        string stateToCount = Console.ReadLine();
-
-        if (stateDictionary.ContainsKey(stateToCount))
-        {
-            int count = stateDictionary[stateToCount].Count;
-            Console.WriteLine($"Number of contact persons in {stateToCount}: {count}");
-        }
-        else
-        {
-            Console.WriteLine("State not found.");
+            Console.WriteLine("No sorting performed.");
         }
     }
 
-    static Dictionary<string, List<Contact>> BuildCityDictionary(List<Contact> contacts)
+    static void PrintContacts(List<Contact> contacts)
     {
-        var cityDictionary = new Dictionary<string, List<Contact>>();
-
         foreach (Contact contact in contacts)
         {
-            if (!cityDictionary.ContainsKey(contact.City))
-            {
-                cityDictionary[contact.City] = new List<Contact>();
-            }
-            cityDictionary[contact.City].Add(contact);
+            Console.WriteLine(contact);
         }
-
-        return cityDictionary;
-    }
-
-    static Dictionary<string, List<Contact>> BuildStateDictionary(List<Contact> contacts)
-    {
-        var stateDictionary = new Dictionary<string, List<Contact>>();
-
-        foreach (Contact contact in contacts)
-        {
-            if (!stateDictionary.ContainsKey(contact.State))
-            {
-                stateDictionary[contact.State] = new List<Contact>();
-            }
-            stateDictionary[contact.State].Add(contact);
-        }
-
-        return stateDictionary;
     }
 }
