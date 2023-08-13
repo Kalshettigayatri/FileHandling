@@ -1,57 +1,64 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 class Contact
 {
     public string Name { get; set; }
     public string PhoneNumber { get; set; }
     public string Email { get; set; }
-
-    public override bool Equals(object obj)
-    {
-        if (obj == null || GetType() != obj.GetType())
-        {
-            return false;
-        }
-
-        Contact otherContact = (Contact)obj;
-        return Name.Equals(otherContact.Name, StringComparison.OrdinalIgnoreCase);
-    }
-
-    public override int GetHashCode()
-    {
-        return Name.GetHashCode();
-    }
+    public string City { get; set; }
+    public string State { get; set; }
 }
 
 class Program
 {
     static void Main(string[] args)
     {
-        List<Contact> addressBook = new List<Contact>();
-
-        AddContact(addressBook, "Alice", "123-456-7890", "alice@example.com");
-        AddContact(addressBook, "Bob", "987-654-3210", "bob@example.com");
-        AddContact(addressBook, "Alice", "111-222-3333", "newalice@example.com"); // Duplicate entry
-
-        foreach (Contact contact in addressBook)
+        List<Contact> addressBook1 = new List<Contact>
         {
-            Console.WriteLine($"Name: {contact.Name}, Phone: {contact.PhoneNumber}, Email: {contact.Email}");
-        }
-    }
+            new Contact { Name = "Alice", PhoneNumber = "123-456-7890", Email = "alice@example.com", City = "New York", State = "NY" },
+            new Contact { Name = "Bob", PhoneNumber = "987-654-3210", Email = "bob@example.com", City = "Los Angeles", State = "CA" }
+        };
 
-    static void AddContact(List<Contact> addressBook, string name, string phoneNumber, string email)
-    {
-        Contact newContact = new Contact { Name = name, PhoneNumber = phoneNumber, Email = email };
-
-        if (!addressBook.Contains(newContact))
+        List<Contact> addressBook2 = new List<Contact>
         {
-            addressBook.Add(newContact);
-            Console.WriteLine("Contact added successfully.");
+            new Contact { Name = "Gayatri", PhoneNumber = "9579015818", Email = "gayatrikalshetti3@gmail.com", City = "solapur", State = "MH" },
+            new Contact { Name = "David", PhoneNumber = "555-666-7777", Email = "david@example.com", City = "Chicago", State = "IL" }
+        };
+
+        List<Contact> allContacts = new List<Contact>();
+        allContacts.AddRange(addressBook1);
+        allContacts.AddRange(addressBook2);
+
+        Console.Write("Enter the city to search: ");
+        string searchCity = Console.ReadLine();
+
+        Console.Write("Enter the state to search: ");
+        string searchState = Console.ReadLine();
+
+        List<Contact> searchResults = SearchContactsByCityOrState(allContacts, searchCity, searchState);
+
+        if (searchResults.Count > 0)
+        {
+            Console.WriteLine($"Search results in {searchCity}, {searchState}:");
+            foreach (Contact contact in searchResults)
+            {
+                Console.WriteLine($"Name: {contact.Name}, Phone: {contact.PhoneNumber}, Email: {contact.Email}");
+            }
         }
         else
         {
-            Console.WriteLine("Duplicate contact. Not added.");
+            Console.WriteLine("No results found.");
         }
+    }
+
+    static List<Contact> SearchContactsByCityOrState(List<Contact> contacts, string city, string state)
+    {
+        return contacts.Where(contact =>
+            contact.City.Equals(city, StringComparison.OrdinalIgnoreCase) ||
+            contact.State.Equals(state, StringComparison.OrdinalIgnoreCase))
+            .ToList();
     }
 }
