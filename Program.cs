@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace AddressBookAppEdit
+namespace AddressBookApp
 {
     class Contact
     {
@@ -24,31 +24,13 @@ namespace AddressBookAppEdit
             contacts.Add(contact);
         }
 
-        public void EditContact(string firstName, string lastName)
+        public void DeleteContact(string firstName, string lastName)
         {
-            Contact contact = FindContact(firstName, lastName);
-            if (contact != null)
+            Contact contactToRemove = FindContact(firstName, lastName);
+            if (contactToRemove != null)
             {
-                Console.WriteLine($"Editing contact: {contact.FirstName} {contact.LastName}");
-                Console.Write("Enter new Address: ");
-                contact.Address = Console.ReadLine();
-
-                Console.Write("Enter new City: ");
-                contact.City = Console.ReadLine();
-
-                Console.Write("Enter new State: ");
-                contact.State = Console.ReadLine();
-
-                Console.Write("Enter new Zip: ");
-                contact.Zip = Console.ReadLine();
-
-                Console.Write("Enter new Phone Number: ");
-                contact.PhoneNumber = Console.ReadLine();
-
-                Console.Write("Enter new Email: ");
-                contact.Email = Console.ReadLine();
-
-                Console.WriteLine("Contact edited successfully.");
+                contacts.Remove(contactToRemove);
+                Console.WriteLine("Contact deleted successfully.");
             }
             else
             {
@@ -87,13 +69,13 @@ namespace AddressBookAppEdit
 
             Console.WriteLine("Welcome to Address Book");
 
-            Console.Write("Enter the first name of the contact to edit: ");
-            string editFirstName = Console.ReadLine();
+            Console.Write("Enter the first name of the contact to delete: ");
+            string deleteFirstName = Console.ReadLine();
 
-            Console.Write("Enter the last name of the contact to edit: ");
-            string editLastName = Console.ReadLine();
+            Console.Write("Enter the last name of the contact to delete: ");
+            string deleteLastName = Console.ReadLine();
 
-            addressBook.EditContact(editFirstName, editLastName);
+            addressBook.DeleteContact(deleteFirstName, deleteLastName);
 
             addressBook.DisplayContacts();
         }
