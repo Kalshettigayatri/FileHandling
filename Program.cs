@@ -22,27 +22,7 @@ namespace AddressBookApp
         public void AddContact(Contact contact)
         {
             contacts.Add(contact);
-        }
-
-        public void DeleteContact(string firstName, string lastName)
-        {
-            Contact contactToRemove = FindContact(firstName, lastName);
-            if (contactToRemove != null)
-            {
-                contacts.Remove(contactToRemove);
-                Console.WriteLine("Contact deleted successfully.");
-            }
-            else
-            {
-                Console.WriteLine("Contact not found.");
-            }
-        }
-
-        private Contact FindContact(string firstName, string lastName)
-        {
-            return contacts.Find(contact =>
-                contact.FirstName.Equals(firstName, StringComparison.OrdinalIgnoreCase) &&
-                contact.LastName.Equals(lastName, StringComparison.OrdinalIgnoreCase));
+            Console.WriteLine("Contact added successfully.");
         }
 
         public void DisplayContacts()
@@ -65,19 +45,51 @@ namespace AddressBookApp
         {
             AddressBook addressBook = new AddressBook();
 
-            // Adding some contacts (you can add more contacts here)
-
             Console.WriteLine("Welcome to Address Book");
 
-            Console.Write("Enter the first name of the contact to delete: ");
-            string deleteFirstName = Console.ReadLine();
+            bool continueAdding = true;
+            while (continueAdding)
+            {
+                Contact newContact = ReadContactFromConsole();
+                addressBook.AddContact(newContact);
 
-            Console.Write("Enter the last name of the contact to delete: ");
-            string deleteLastName = Console.ReadLine();
-
-            addressBook.DeleteContact(deleteFirstName, deleteLastName);
+                Console.Write("Do you want to add another contact? (yes/no): ");
+                string response = Console.ReadLine();
+                continueAdding = response.Equals("yes", StringComparison.OrdinalIgnoreCase);
+            }
 
             addressBook.DisplayContacts();
+        }
+
+        static Contact ReadContactFromConsole()
+        {
+            Contact contact = new Contact();
+
+            Console.Write("Enter First Name: ");
+            contact.FirstName = Console.ReadLine();
+
+            Console.Write("Enter Last Name: ");
+            contact.LastName = Console.ReadLine();
+
+            Console.Write("Enter Address: ");
+            contact.Address = Console.ReadLine();
+
+            Console.Write("Enter City: ");
+            contact.City = Console.ReadLine();
+
+            Console.Write("Enter State: ");
+            contact.State = Console.ReadLine();
+
+            Console.Write("Enter Zip: ");
+            contact.Zip = Console.ReadLine();
+
+            Console.Write("Enter Phone Number: ");
+            contact.PhoneNumber = Console.ReadLine();
+
+            Console.Write("Enter Email: ");
+            contact.Email = Console.ReadLine();
+
+            return contact;
         }
     }
 }
